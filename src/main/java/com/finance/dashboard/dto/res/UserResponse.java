@@ -1,10 +1,12 @@
 package com.finance.dashboard.dto.res;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
 
 	private Long id;
@@ -13,4 +15,5 @@ public class UserResponse {
 	private String email;
 	private String role;
 	private String status;
+
 }

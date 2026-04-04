@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finance.dashboard.dto.req.CreateFinancialRecordRequest;
+import com.finance.dashboard.dto.req.UpdateFinancialRecordRequest;
 import com.finance.dashboard.dto.res.FinancialRecordResponse;
 import com.finance.dashboard.service.FinancialRecordService;
 
@@ -94,5 +96,18 @@ public class FinancialRecordController {
 		log.info("Financial record with id {} deleted successfully", id);
 
 		return ResponseEntity.ok("Financial record deleted successfully");
+	}
+
+	@PutMapping("/{id}")
+	public FinancialRecordResponse updateRecord(@PathVariable Long id,
+			@Valid @RequestBody UpdateFinancialRecordRequest request) {
+
+		log.info("Updating financial record with id: {} using data: {}", id, request);
+
+		FinancialRecordResponse response = recordService.updateRecord(id, request);
+
+		log.info("Financial record with id {} updated successfully: {}", id, response);
+
+		return response;
 	}
 }

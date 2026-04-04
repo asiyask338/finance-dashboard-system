@@ -2,11 +2,13 @@ package com.finance.dashboard.dto.res;
 
 import java.time.LocalDate;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FinancialRecordResponse {
 
 	private Long id;

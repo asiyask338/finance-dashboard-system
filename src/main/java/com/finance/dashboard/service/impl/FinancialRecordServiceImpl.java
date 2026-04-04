@@ -5,10 +5,15 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.finance.dashboard.constants.Constant;
 import com.finance.dashboard.dto.req.CreateFinancialRecordRequest;
+import com.finance.dashboard.dto.req.UpdateFinancialRecordRequest;
 import com.finance.dashboard.dto.res.FinancialRecordResponse;
 import com.finance.dashboard.entity.FinancialRecord;
 import com.finance.dashboard.entity.User;
+import com.finance.dashboard.exception.BadRequestException;
+import com.finance.dashboard.exception.BusinessException;
+import com.finance.dashboard.exception.DuplicateResourceException;
 import com.finance.dashboard.exception.ResourceNotFoundException;
 import com.finance.dashboard.repository.FinancialRecordRepository;
 import com.finance.dashboard.repository.UserRepository;
@@ -36,6 +41,13 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 
 		log.info("User found: {}", user.getName());
 
+		boolean exists = recordRepository.existsByUserIdAndRecordDateAndTypeAndCategory(request.getUserId(),
+				request.getRecordDate(), request.getType(), request.getCategory());
+
+		if (exists) {
+			throw new DuplicateResourceException("Duplicate financial record already exists");
+		}
+
 		FinancialRecord record = modelMapper.map(request, FinancialRecord.class);
 		record.setUser(user);
 		record.setCreatedBy(user.getId());
@@ -55,10 +67,7 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 
 		log.info("Retrieving all financial records...");
 
-		return recordRepository.findAll().stream()
-				.map(record -> FinancialRecordResponse.builder().id(record.getId()).amount(record.getAmount())
-						.type(record.getType()).category(record.getCategory()).recordDate(record.getRecordDate())
-						.notes(record.getNotes()).userName(record.getUser().getName()).build())
+		return recordRepository.findAll().stream().map(record -> modelMapper.map(record, FinancialRecordResponse.class))
 				.toList();
 	}
 
@@ -67,11 +76,14 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 
 		log.info("Retrieving financial records by type: {}", type);
 
-		return recordRepository.findByType(type).stream()
-				.map(r -> FinancialRecordResponse.builder().id(r.getId()).amount(r.getAmount()).type(r.getType())
-						.category(r.getCategory()).recordDate(r.getRecordDate()).notes(r.getNotes())
-						.userName(r.getUser().getName()).build())
-				.toList();
+		String normalizedType = type.toUpperCase();
+
+		if (!normalizedType.equals(Constant.INCOME) && !normalizedType.equals(Constant.EXPENSE)) {
+			throw new BusinessException("Invalid record type: " + type);
+		}
+
+		return recordRepository.findByTypeIgnoreCase(normalizedType).stream()
+				.map(record -> modelMapper.map(record, FinancialRecordResponse.class)).toList();
 	}
 
 	@Override
@@ -79,11 +91,8 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 
 		log.info("Retrieving financial records by category: {}", category);
 
-		return recordRepository.findByCategory(category).stream()
-				.map(r -> FinancialRecordResponse.builder().id(r.getId()).amount(r.getAmount()).type(r.getType())
-						.category(r.getCategory()).recordDate(r.getRecordDate()).notes(r.getNotes())
-						.userName(r.getUser().getName()).build())
-				.toList();
+		return recordRepository.findByCategoryIgnoreCase(category).stream()
+				.map(record -> modelMapper.map(record, FinancialRecordResponse.class)).toList();
 	}
 
 	@Override
@@ -97,5 +106,37 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 		log.info("Financial record found: {} with amount: {}", record.getId(), record.getAmount());
 
 		recordRepository.delete(record);
+	}
+
+	@Override
+	public FinancialRecordResponse updateRecord(Long id, UpdateFinancialRecordRequest request) {
+
+		log.info("Updating financial record with ID: {}", id);
+
+		FinancialRecord record = recordRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Record not found"));
+
+		log.info("Financial record found: {} with amount: {}", record.getId(), record.getAmount());
+
+		record.setAmount(request.getAmount());
+		record.setType(request.getType());
+		record.setCategory(request.getCategory());
+		record.setRecordDate(request.getRecordDate());
+		record.setNotes(request.getNotes());
+
+		FinancialRecord updated = recordRepository.save(record);
+
+		if (!request.getType().equals(Constant.INCOME) && !request.getType().equals(Constant.EXPENSE)) {
+			log.error("Invalid record type: {}", request.getType());
+
+			throw new BadRequestException("Invalid type");
+		}
+
+		FinancialRecordResponse response = modelMapper.map(updated, FinancialRecordResponse.class);
+		response.setUserName(updated.getUser().getName());
+
+		log.info("Financial record updated with ID: {}", updated.getId());
+
+		return response;
 	}
 }

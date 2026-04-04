@@ -3,6 +3,7 @@ package com.finance.dashboard.service;
 import java.util.List;
 
 import com.finance.dashboard.dto.req.CreateFinancialRecordRequest;
+import com.finance.dashboard.dto.req.UpdateFinancialRecordRequest;
 import com.finance.dashboard.dto.res.FinancialRecordResponse;
 
 public interface FinancialRecordService {
@@ -16,4 +17,6 @@ public interface FinancialRecordService {
 	List<FinancialRecordResponse> getByCategory(String category);
 
 	void deleteRecord(Long id);
+
+	FinancialRecordResponse updateRecord(Long id, UpdateFinancialRecordRequest request);
 }

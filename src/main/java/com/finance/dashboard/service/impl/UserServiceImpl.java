@@ -7,10 +7,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.finance.dashboard.dto.req.CreateUserRequest;
+import com.finance.dashboard.dto.req.UpdateUserRequest;
 import com.finance.dashboard.dto.res.UserResponse;
 import com.finance.dashboard.entity.Role;
 import com.finance.dashboard.entity.User;
 import com.finance.dashboard.enums.UserStatus;
+import com.finance.dashboard.exception.BadRequestException;
 import com.finance.dashboard.exception.ResourceNotFoundException;
 import com.finance.dashboard.repository.RoleRepository;
 import com.finance.dashboard.repository.UserRepository;
@@ -57,10 +59,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserResponse> getAllUsers() {
-		return userRepository
-				.findAll().stream().map(user -> UserResponse.builder().id(user.getId()).name(user.getName())
-						.email(user.getEmail()).role(user.getRole().getName()).status(user.getStatus().name()).build())
-				.toList();
+		log.info("Fetching all users");
+
+		return userRepository.findAll().stream().map(user -> modelMapper.map(user, UserResponse.class)).toList();
 	}
 
 	@Override
@@ -73,8 +74,8 @@ public class UserServiceImpl implements UserService {
 
 		log.info("Found user: {}", user.getEmail());
 
-		return UserResponse.builder().id(user.getId()).name(user.getName()).email(user.getEmail())
-				.role(user.getRole().getName()).status(user.getStatus().name()).build();
+		return modelMapper.map(user, UserResponse.class);
+
 	}
 
 	@Override
@@ -90,5 +91,38 @@ public class UserServiceImpl implements UserService {
 		userRepository.delete(user);
 
 		log.info("User deleted with id: {}", id);
+	}
+
+	@Override
+	public UserResponse updateUser(Long id, UpdateUserRequest request) {
+
+		log.info("Updating user with id: {}", id);
+
+		User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+		log.info("Found user: {}", user.getEmail());
+
+		Role role = roleRepository.findById(request.getRoleId())
+				.orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		user.setRole(role);
+
+		try {
+			user.setStatus(UserStatus.valueOf(request.getStatus()));
+
+			log.info("Updated user status to: {}", user.getStatus());
+		} catch (IllegalArgumentException ex) {
+			log.error("Invalid status value: {}", request.getStatus());
+
+			throw new BadRequestException("Invalid status value");
+		}
+
+		User updatedUser = userRepository.save(user);
+
+		log.info("User updated with id: {}", updatedUser.getId());
+
+		return modelMapper.map(user, UserResponse.class);
 	}
 }

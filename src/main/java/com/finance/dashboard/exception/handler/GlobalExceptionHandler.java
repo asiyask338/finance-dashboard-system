@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.slf4j.MDC;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,7 +30,7 @@ public class GlobalExceptionHandler {
 
 		log.info("Generating traceId for error response");
 
-		return MDC.get(Constant.traceId) != null ? MDC.get(Constant.traceId) : UUID.randomUUID().toString();
+		return MDC.get(Constant.TraceId) != null ? MDC.get(Constant.TraceId) : UUID.randomUUID().toString();
 	}
 
 	// resource Not Found
@@ -43,11 +45,44 @@ public class GlobalExceptionHandler {
 				.timeStamp(LocalDateTime.now()).build();
 	}
 
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+
+		log.error("Validation Exception occurred: {}", ex.getMessage(), ex);
+
+		String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+				.map(error -> error.getField() + ": " + error.getDefaultMessage()).findFirst()
+				.orElse("Validation failed");
+
+		return ErrorResponse.builder().errorCode(Constant.VALIDATION_ERROR).message(errorMessage)
+				.path(request.getRequestURI()).httpMethod(request.getMethod()).traceId(generateTraceId())
+				.timeStamp(LocalDateTime.now()).build();
+	}
+
 	// Validation Errors
 	@ExceptionHandler(BadRequestException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse handleBadRequest(BadRequestException ex, HttpServletRequest request) {
+		log.error("Bad Request Exception occured : {} ", ex.getMessage(), ex);
+
 		return buildError(Constant.BAD_REQUEST, ex.getMessage(), request, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
+
+		log.error("Data Integrity Violation: {}", ex.getMessage(), ex);
+
+		String message = "Duplicate resource found";
+
+		if (ex.getMessage() != null && ex.getMessage().contains("users.email")) {
+			message = "Email already exists";
+		}
+
+		return ErrorResponse.builder().errorCode(Constant.DATA_CONFLICT).message(message).path(request.getRequestURI())
+				.httpMethod(request.getMethod()).traceId(generateTraceId()).timeStamp(LocalDateTime.now()).build();
 	}
 
 	@ExceptionHandler(DuplicateResourceException.class)
