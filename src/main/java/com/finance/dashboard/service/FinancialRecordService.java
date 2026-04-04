@@ -1,0 +1,19 @@
+package com.finance.dashboard.service;
+
+import java.util.List;
+
+import com.finance.dashboard.dto.req.CreateFinancialRecordRequest;
+import com.finance.dashboard.dto.res.FinancialRecordResponse;
+
+public interface FinancialRecordService {
+
+	FinancialRecordResponse createRecord(CreateFinancialRecordRequest request);
+
+	List<FinancialRecordResponse> getAllRecords();
+
+	List<FinancialRecordResponse> getByType(String type);
+
+	List<FinancialRecordResponse> getByCategory(String category);
+
+	void deleteRecord(Long id);
+}
