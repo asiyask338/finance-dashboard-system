@@ -274,6 +274,30 @@ spring.datasource.password=YOUR_PASSWORD
 CREATE DATABASE finance_dashboard;
 ```
 
+🗄️ Database Schema
+## 🗄 Database Schema
+
+The application uses a relational database (MySQL) with the following core tables:
+
+---
+
+### 1️⃣ users
+
+Stores user details and role information.
+
+| Column       | Type         | Description                          |
+|-------------|-------------|--------------------------------------|
+| id          | BIGINT (PK) | Unique user ID                       |
+| name        | VARCHAR     | User name                            |
+| email       | VARCHAR     | Unique email                         |
+| password    | VARCHAR     | User password (simplified)           |
+| role_id     | BIGINT      | Foreign key to roles table           |
+| status      | VARCHAR     | ACTIVE / INACTIVE                    |
+| is_deleted  | BOOLEAN     | Soft delete flag                     |
+| created_at  | TIMESTAMP   | Creation timestamp                   |
+| updated_at  | TIMESTAMP   | Last update timestamp                |
+
+
 Configuration
 ⚙️ Application Configuration (Profiles)
 
@@ -306,6 +330,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
+```
 
 > Run Application
 
