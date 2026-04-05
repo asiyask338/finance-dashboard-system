@@ -4,6 +4,7 @@ package com.finance.dashboard.service.impl;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.finance.dashboard.dto.req.CreateUserRequest;
@@ -29,11 +30,10 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final ModelMapper modelMapper;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserResponse createUser(CreateUserRequest request) {
-
-//		checkAdminAccess(currentUserRole);
 
 		log.info("Creating user with email: {}", request.getEmail());
 
@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
 		User user = modelMapper.map(request, User.class);
 		user.setRole(role);
 		user.setStatus(UserStatus.ACTIVE);
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
 
 		User savedUser = userRepository.save(user);
 

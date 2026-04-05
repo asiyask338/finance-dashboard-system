@@ -26,4 +26,14 @@ public class Constant {
 
 	public static final String EXPENSE = "EXPENSE";
 
+	public static final String ROLE = "role";
+
+	public static final String USERID = "userId";
+
+	public static final String AUTHORIZAION = "Authorization";
+
+	public static final String BEARER = "Bearer ";
+
+	public static final String ACCESSROLE = "ROLE_";
+
 }

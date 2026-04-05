@@ -1,7 +1,6 @@
 package com.finance.dashboard.dto.req;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -9,8 +8,8 @@ import lombok.Data;
 @Data
 public class UpdateUserRequest {
 
-	@NotBlank(message = "Name is required")
-	@Min(value = 3, message = "Name must be at least 3 characters")
+//	@NotBlank(message = "Name is required")
+//	@Min(value = 3, message = "Name must be at least 3 characters")
 	private String name;
 
 	@Email(message = "Invalid email")

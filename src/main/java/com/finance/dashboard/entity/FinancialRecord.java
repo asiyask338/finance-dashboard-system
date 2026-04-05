@@ -3,7 +3,9 @@ package com.finance.dashboard.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -48,8 +50,10 @@ public class FinancialRecord {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	@CreatedBy
 	private Long createdBy;
 
+	@LastModifiedBy
 	private Long updatedBy;
 
 	@CreatedDate
