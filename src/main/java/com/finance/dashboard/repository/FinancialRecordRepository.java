@@ -3,6 +3,8 @@ package com.finance.dashboard.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -54,4 +56,10 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
 			ORDER BY MONTH(r.recordDate)
 			""")
 	List<Object[]> getMonthlySummary();
+
+	@Query("SELECT r FROM FinancialRecord r WHERE " + "LOWER(r.category) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
+			+ "LOWER(r.notes) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
+			+ "LOWER(r.type) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+	Page<FinancialRecord> searchRecords(@Param("keyword") String keyword, Pageable pageable);
+
 }

@@ -183,4 +183,25 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 			return response;
 		}).toList();
 	}
+
+	@Override
+	public Page<FinancialRecordResponse> searchRecords(String keyword, Pageable pageable) {
+
+		Page<FinancialRecord> recordsPage = recordRepository.searchRecords(keyword, pageable);
+
+		return recordsPage.map(record -> {
+			FinancialRecordResponse response = new FinancialRecordResponse();
+
+			response.setId(record.getId());
+			response.setAmount(record.getAmount());
+			response.setType(record.getType());
+			response.setCategory(record.getCategory());
+			response.setRecordDate(record.getRecordDate());
+			response.setNotes(record.getNotes());
+			response.setUserName(record.getUser().getName());
+
+			return response;
+		});
+	}
+
 }

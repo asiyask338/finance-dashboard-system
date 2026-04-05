@@ -25,4 +25,6 @@ public interface FinancialRecordService {
 	FinancialRecordResponse updateRecord(Long id, UpdateFinancialRecordRequest request);
 
 	List<FinancialRecordResponse> filterRecords(String type, String category, LocalDate startDate, LocalDate endDate);
+
+	Page<FinancialRecordResponse> searchRecords(String keyword, Pageable pageable);
 }

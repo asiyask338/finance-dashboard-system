@@ -130,4 +130,18 @@ public class FinancialRecordController {
 		return response;
 	}
 
+	@GetMapping("/search")
+	@Operation(summary = "search records by ", description = "search records by keyword")
+	public Page<FinancialRecordResponse> searchRecords(@RequestParam(required = false) String keyword,
+			Pageable pageable) {
+
+		log.info("Searching records by filter : {} ", keyword);
+
+		Page<FinancialRecordResponse> response = recordService.searchRecords(keyword, pageable);
+
+		log.info("Response | search result size: {}", response.getSize());
+
+		return response;
+	}
+
 }
