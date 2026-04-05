@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
 		log.info("Generating traceId for error response");
 
-		return MDC.get(Constant.TraceId) != null ? MDC.get(Constant.TraceId) : UUID.randomUUID().toString();
+		return MDC.get(Constant.TraceId);
 	}
 
 	// resource Not Found
