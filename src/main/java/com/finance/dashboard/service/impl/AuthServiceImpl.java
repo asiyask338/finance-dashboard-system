@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.finance.dashboard.dto.req.LoginRequest;
 import com.finance.dashboard.entity.User;
+import com.finance.dashboard.exception.BadRequestException;
 import com.finance.dashboard.exception.BusinessException;
 import com.finance.dashboard.exception.ResourceNotFoundException;
 import com.finance.dashboard.repository.UserRepository;
@@ -34,6 +35,9 @@ public class AuthServiceImpl implements AuthService {
 			return new ResourceNotFoundException("User not found with email: " + request.getEmail());
 		});
 
+		if (user.isDeleted()) {
+			throw new BadRequestException("User is inactive or deleted");
+		}
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new BusinessException("Invalid email or password");
 		}

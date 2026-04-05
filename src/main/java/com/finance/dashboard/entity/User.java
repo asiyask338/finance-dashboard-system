@@ -58,6 +58,9 @@ public class User {
 	@Column(nullable = false)
 	private UserStatus status;
 
+	@Column(name = "is_deleted")
+	private boolean isDeleted = false;
+
 	@CreatedDate
 	private LocalDateTime createdAt;
 

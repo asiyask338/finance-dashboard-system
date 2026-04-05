@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
 		log.info("Found role: {}", role.getName());
 
 		User user = modelMapper.map(request, User.class);
+
 		user.setRole(role);
 		user.setStatus(UserStatus.ACTIVE);
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -89,6 +90,9 @@ public class UserServiceImpl implements UserService {
 
 		log.info("Found user: {}", user.getEmail());
 
+		user.setDeleted(true);
+		user.setStatus(UserStatus.INACTIVE);
+
 		userRepository.delete(user);
 
 		log.info("User deleted with id: {}", id);
@@ -100,6 +104,10 @@ public class UserServiceImpl implements UserService {
 		log.info("Updating user with id: {}", id);
 
 		User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+		if (user.isDeleted()) {
+			throw new BadRequestException("User is inactive or deleted");
+		}
 
 		log.info("Found user: {}", user.getEmail());
 

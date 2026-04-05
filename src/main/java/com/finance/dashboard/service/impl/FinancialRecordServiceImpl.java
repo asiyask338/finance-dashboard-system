@@ -44,6 +44,10 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 
 		log.info("User found: {}", user.getName());
 
+		if (user.isDeleted()) {
+			throw new BadRequestException("User is inactive or deleted");
+		}
+
 		boolean exists = recordRepository.existsByUserIdAndRecordDateAndTypeAndCategory(request.getUserId(),
 				request.getRecordDate(), request.getType(), request.getCategory());
 
