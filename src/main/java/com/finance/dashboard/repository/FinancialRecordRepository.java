@@ -41,4 +41,6 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
 			""")
 	List<FinancialRecord> filterRecords(@Param("type") String type, @Param("category") String category,
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+	List<FinancialRecord> findTop5ByOrderByRecordDateDesc();
 }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.finance.dashboard.dto.res.CategorySummaryResponse;
 import com.finance.dashboard.dto.res.DashboardSummaryResponse;
+import com.finance.dashboard.dto.res.FinancialRecordResponse;
+import com.finance.dashboard.entity.FinancialRecord;
 import com.finance.dashboard.repository.FinancialRecordRepository;
 import com.finance.dashboard.service.DashboardService;
 
@@ -52,5 +54,25 @@ public class DashboardServiceImpl implements DashboardService {
 		return recordRepository.getCategorySummary().stream()
 				.map(obj -> CategorySummaryResponse.builder().category((String) obj[0]).total((Double) obj[1]).build())
 				.toList();
+	}
+
+	@Override
+	public List<FinancialRecordResponse> getRecentRecords() {
+
+		List<FinancialRecord> records = recordRepository.findTop5ByOrderByRecordDateDesc();
+
+		return records.stream().map(record -> {
+			FinancialRecordResponse response = new FinancialRecordResponse();
+
+			response.setId(record.getId());
+			response.setAmount(record.getAmount());
+			response.setType(record.getType());
+			response.setCategory(record.getCategory());
+			response.setRecordDate(record.getRecordDate());
+			response.setNotes(record.getNotes());
+			response.setUserName(record.getUser().getName());
+
+			return response;
+		}).toList();
 	}
 }

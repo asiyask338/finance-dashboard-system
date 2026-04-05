@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.finance.dashboard.dto.res.CategorySummaryResponse;
 import com.finance.dashboard.dto.res.DashboardSummaryResponse;
+import com.finance.dashboard.dto.res.FinancialRecordResponse;
 
 public interface DashboardService {
 	DashboardSummaryResponse getSummary();
 
 	List<CategorySummaryResponse> getCategorySummary();
 
+	List<FinancialRecordResponse> getRecentRecords();
 }

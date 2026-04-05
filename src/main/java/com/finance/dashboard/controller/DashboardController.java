@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finance.dashboard.dto.res.CategorySummaryResponse;
 import com.finance.dashboard.dto.res.DashboardSummaryResponse;
+import com.finance.dashboard.dto.res.FinancialRecordResponse;
 import com.finance.dashboard.service.DashboardService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +46,20 @@ public class DashboardController {
 
 		List<CategorySummaryResponse> response = dashboardService.getCategorySummary();
 
-		log.info("Category summary response: {}", response);
+		log.info("Category summary response:  {}", response);
+
+		return response;
+	}
+
+	@GetMapping("/recent")
+	@Operation(summary = "Get the recent record ", description = "Get the recent financial record transactions... ")
+	public List<FinancialRecordResponse> getRecentRecords() {
+
+		log.info("fetching the recent transactions..");
+
+		List<FinancialRecordResponse> response = dashboardService.getRecentRecords();
+
+		log.info("Fetched recent records : {} ", response);
 
 		return response;
 	}

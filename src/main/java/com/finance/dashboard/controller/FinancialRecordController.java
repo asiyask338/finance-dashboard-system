@@ -116,7 +116,7 @@ public class FinancialRecordController {
 	}
 
 	@GetMapping("/filter")
-	@Operation(summary = "Filter records by Type | Category | Start Date | Last Date")
+	@Operation(summary = "Filter records by ", description = "Get the filtered record by Type | Category | Start Date | Last Date")
 	public List<FinancialRecordResponse> filterRecords(@RequestParam(required = false) String type,
 			@RequestParam(required = false) String category, @RequestParam(required = false) LocalDate startDate,
 			@RequestParam(required = false) LocalDate endDate) {
@@ -129,4 +129,5 @@ public class FinancialRecordController {
 
 		return response;
 	}
+
 }
