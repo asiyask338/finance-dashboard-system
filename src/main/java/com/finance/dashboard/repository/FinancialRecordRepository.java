@@ -43,4 +43,15 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 	List<FinancialRecord> findTop5ByOrderByRecordDateDesc();
+
+	@Query("""
+			SELECT
+			    MONTH(r.recordDate),
+			    SUM(CASE WHEN r.type = 'INCOME' THEN r.amount ELSE 0 END),
+			    SUM(CASE WHEN r.type = 'EXPENSE' THEN r.amount ELSE 0 END)
+			FROM FinancialRecord r
+			GROUP BY MONTH(r.recordDate)
+			ORDER BY MONTH(r.recordDate)
+			""")
+	List<Object[]> getMonthlySummary();
 }

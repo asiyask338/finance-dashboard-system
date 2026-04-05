@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.finance.dashboard.dto.res.CategorySummaryResponse;
 import com.finance.dashboard.dto.res.DashboardSummaryResponse;
 import com.finance.dashboard.dto.res.FinancialRecordResponse;
+import com.finance.dashboard.dto.res.MonthlySummaryResponse;
 import com.finance.dashboard.service.DashboardService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,6 +61,18 @@ public class DashboardController {
 		List<FinancialRecordResponse> response = dashboardService.getRecentRecords();
 
 		log.info("Fetched recent records : {} ", response);
+
+		return response;
+	}
+
+	@GetMapping("/monthly")
+	@Operation(summary = "Get monthly summary ", description = "Get the monthly summary of all financial transactions... ")
+	public List<MonthlySummaryResponse> getMonthlySummary() {
+		log.info("fetching the monthly summary..");
+
+		List<MonthlySummaryResponse> response = dashboardService.getMonthlySummary();
+
+		log.info("Fetched monthly summary : {} ", response);
 
 		return response;
 	}

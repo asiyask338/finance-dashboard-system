@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.finance.dashboard.dto.res.CategorySummaryResponse;
 import com.finance.dashboard.dto.res.DashboardSummaryResponse;
 import com.finance.dashboard.dto.res.FinancialRecordResponse;
+import com.finance.dashboard.dto.res.MonthlySummaryResponse;
 import com.finance.dashboard.entity.FinancialRecord;
 import com.finance.dashboard.repository.FinancialRecordRepository;
 import com.finance.dashboard.service.DashboardService;
@@ -74,5 +75,31 @@ public class DashboardServiceImpl implements DashboardService {
 
 			return response;
 		}).toList();
+	}
+
+	@Override
+	public List<MonthlySummaryResponse> getMonthlySummary() {
+
+		List<Object[]> results = recordRepository.getMonthlySummary();
+
+		return results.stream().map(obj -> {
+
+			MonthlySummaryResponse response = new MonthlySummaryResponse();
+
+			Integer monthNumber = (Integer) obj[0];
+			Double income = (Double) obj[1];
+			Double expense = (Double) obj[2];
+
+			response.setMonth(getMonthName(monthNumber));
+			response.setTotalIncome(income != null ? income : 0.0);
+			response.setTotalExpense(expense != null ? expense : 0.0);
+
+			return response;
+
+		}).toList();
+	}
+
+	private String getMonthName(int month) {
+		return java.time.Month.of(month).name(); // JANUARY, FEBRUARY...
 	}
 }
