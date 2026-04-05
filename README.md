@@ -274,7 +274,6 @@ spring.datasource.password=YOUR_PASSWORD
 CREATE DATABASE finance_dashboard;
 ```
 
-🗄️ Database Schema
 ## 🗄 Database Schema
 
 The application uses a relational database (MySQL) with the following core tables:
@@ -285,6 +284,7 @@ The application uses a relational database (MySQL) with the following core table
 
 Stores user details and role information.
 
+```
 | Column       | Type         | Description                          |
 |-------------|-------------|--------------------------------------|
 | id          | BIGINT (PK) | Unique user ID                       |
@@ -296,9 +296,60 @@ Stores user details and role information.
 | is_deleted  | BOOLEAN     | Soft delete flag                     |
 | created_at  | TIMESTAMP   | Creation timestamp                   |
 | updated_at  | TIMESTAMP   | Last update timestamp                |
+```
+
+---
+
+### 2️⃣ roles
+
+Defines user roles in the system.
+
+```
+| Column       | Type         | Description                          |
+|-------------|-------------|--------------------------------------|
+| id          | BIGINT (PK) | Role ID                              |
+| name        | VARCHAR     | Role name (ADMIN, ANALYST, VIEWER)   |
+| description | VARCHAR     | Role description                     |
+```
+
+---
+
+### 3️⃣ financial_records
+
+Stores financial transactions.
+
+```
+| Column        | Type         | Description                          |
+|--------------|-------------|--------------------------------------|
+| id           | BIGINT (PK) | Record ID                            |
+| amount       | DECIMAL     | Transaction amount                   |
+| type         | VARCHAR     | INCOME / EXPENSE                     |
+| category     | VARCHAR     | Transaction category                 |
+| record_date  | DATE        | Date of transaction                  |
+| notes        | VARCHAR     | Additional notes                     |
+| user_id      | BIGINT      | Foreign key to users table           |
+| created_by   | BIGINT      | Created by user                      |
+| updated_by   | BIGINT      | Updated by user                      |
+| created_at   | TIMESTAMP   | Creation timestamp                   |
+| updated_at   | TIMESTAMP   | Last update timestamp                |
+```
+
+---
+
+### 🔗 Relationships
+
+- `users.role_id → roles.id`
+- `financial_records.user_id → users.id`
+
+---
+
+### 🧠 Design Notes
+
+- Foreign keys ensure data integrity
+- Soft delete is applied only on users
+- Financial records are preserved for historical and analytical purposes
 
 
-Configuration
 ⚙️ Application Configuration (Profiles)
 
 ### Spring Profiles
