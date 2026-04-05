@@ -297,7 +297,7 @@ Stores user details and role information.
 | created_at  | TIMESTAMP   | Creation timestamp                   |
 | updated_at  | TIMESTAMP   | Last update timestamp                |
 ```
-
+	
 ---
 
 ### 2️⃣ roles
@@ -395,3 +395,53 @@ mvn spring-boot:run
 Application: http://localhost:8088
 Swagger UI: http://localhost:8088/swagger-ui/index.html
 ```
+
+---
+
+## 🧠 Design Decisions
+- JWT used for authentication instead of session-based auth
+- RBAC enforced using Spring Security
+- Soft delete used for users to preserve financial records
+- Service layer handles all business logic
+- DTOs used for clean API design
+
+---
+
+## ⚠️ Assumptions
+- Authentication simplified (email+password based login)
+- Single currency system
+- Moderate data size (no distributed caching)
+
+---
+
+## ⚖️ Trade-offs
+- In-memory rate limiting instead of Redis (simpler setup)
+- No refresh tokens implemented
+
+---
+
+## 🧪 Testing
+- APIs tested using Swagger and Postman
+- JWT authentication validated across endpoints
+- Unit testing implemented using JUnit and Mockito
+  - Service layer methods tested
+  - Repository dependencies mocked
+  - Success and failure scenarios covered
+
+---
+
+## 🧹 Code Quality & Debugging
+
+- SonarQube used for static code analysis and code quality checks
+- Followed clean coding practices and naming conventions
+- Used IDE debugging for troubleshooting and issue resolution
+- Ensured proper logging for monitoring and debugging
+
+## 🚀 Future Enhancements
+- Add refresh tokens
+- Implement Redis-based rate limiting
+- Add integration tests
+- Add caching for dashboard APIs
+
+---
+ 
