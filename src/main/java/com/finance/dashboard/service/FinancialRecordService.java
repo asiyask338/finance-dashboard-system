@@ -3,6 +3,9 @@ package com.finance.dashboard.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.finance.dashboard.dto.req.CreateFinancialRecordRequest;
 import com.finance.dashboard.dto.req.UpdateFinancialRecordRequest;
 import com.finance.dashboard.dto.res.FinancialRecordResponse;
@@ -11,7 +14,7 @@ public interface FinancialRecordService {
 
 	FinancialRecordResponse createRecord(CreateFinancialRecordRequest request);
 
-	List<FinancialRecordResponse> getAllRecords();
+	Page<FinancialRecordResponse> getAllRecords(Pageable pageable);
 
 	List<FinancialRecordResponse> getByType(String type);
 

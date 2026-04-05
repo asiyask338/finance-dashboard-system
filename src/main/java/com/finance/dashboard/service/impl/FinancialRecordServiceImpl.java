@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.finance.dashboard.constants.Constant;
@@ -64,12 +66,23 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 	}
 
 	@Override
-	public List<FinancialRecordResponse> getAllRecords() {
+	public Page<FinancialRecordResponse> getAllRecords(Pageable pageable) {
 
-		log.info("Retrieving all financial records...");
+		Page<FinancialRecord> records = recordRepository.findAll(pageable);
 
-		return recordRepository.findAll().stream().map(record -> modelMapper.map(record, FinancialRecordResponse.class))
-				.toList();
+		return records.map(record -> {
+			FinancialRecordResponse response = new FinancialRecordResponse();
+
+			response.setId(record.getId());
+			response.setAmount(record.getAmount());
+			response.setType(record.getType());
+			response.setCategory(record.getCategory());
+			response.setRecordDate(record.getRecordDate());
+			response.setNotes(record.getNotes());
+			response.setUserName(record.getUser().getName());
+
+			return response;
+		});
 	}
 
 	@Override

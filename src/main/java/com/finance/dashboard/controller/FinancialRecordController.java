@@ -3,6 +3,8 @@ package com.finance.dashboard.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,14 +50,14 @@ public class FinancialRecordController {
 	}
 
 	@GetMapping
-	@Operation(summary = "Get all financial records", description = "Retrieve a list of all income and expense records")
-	public List<FinancialRecordResponse> getAllRecords() {
+	@Operation(summary = "Get all financial records", description = "Retrieve a list of all income and expense records by pagination")
+	public Page<FinancialRecordResponse> getAllRecords(Pageable pageable) {
 
 		log.info("Fetching all financial records");
 
-		List<FinancialRecordResponse> response = recordService.getAllRecords();
+		Page<FinancialRecordResponse> response = recordService.getAllRecords(pageable);
 
-		log.info("Fetched {} financial records", response.size());
+		log.info("Fetched {} financial records", response.getSize());
 
 		return response;
 	}
@@ -100,6 +102,7 @@ public class FinancialRecordController {
 	}
 
 	@PutMapping("/{id}")
+	@Operation(summary = "Update financial record by ID")
 	public FinancialRecordResponse updateRecord(@PathVariable Long id,
 			@Valid @RequestBody UpdateFinancialRecordRequest request) {
 
@@ -113,6 +116,7 @@ public class FinancialRecordController {
 	}
 
 	@GetMapping("/filter")
+	@Operation(summary = "Filter records by Type | Category | Start Date | Last Date")
 	public List<FinancialRecordResponse> filterRecords(@RequestParam(required = false) String type,
 			@RequestParam(required = false) String category, @RequestParam(required = false) LocalDate startDate,
 			@RequestParam(required = false) LocalDate endDate) {
