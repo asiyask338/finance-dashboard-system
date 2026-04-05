@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 	private final ModelMapper modelMapper;
 
 	@Override
+	@CacheEvict(value = { "summaryCache", "monthlyCache", "recentCache", "categoryCache" }, allEntries = true)
 	public FinancialRecordResponse createRecord(CreateFinancialRecordRequest request) {
 
 		log.info("Creating financial record for user ID: {}", request.getUserId());
@@ -114,6 +116,7 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 	}
 
 	@Override
+	@CacheEvict(value = { "summaryCache", "monthlyCache", "recentCache", "categoryCache" }, allEntries = true)
 	public void deleteRecord(Long id) {
 
 		log.info("Deleting financial record with ID: {}", id);
@@ -127,6 +130,7 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 	}
 
 	@Override
+	@CacheEvict(value = { "summaryCache", "monthlyCache", "recentCache", "categoryCache" }, allEntries = true)
 	public FinancialRecordResponse updateRecord(Long id, UpdateFinancialRecordRequest request) {
 
 		log.info("Updating financial record with ID: {}", id);

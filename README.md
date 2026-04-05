@@ -406,6 +406,14 @@ Swagger UI: http://localhost:8088/swagger-ui/index.html
 - DTOs used for clean API design
 
 ---
+## ⚡ Caching
+
+Caching is implemented for dashboard APIs using Spring Cache.
+
+- Summary, Monthly, and Recent APIs are cached
+- Cache is cleared on data updates
+- Improves performance and reduces database load
+
 
 ## ⚠️ Assumptions
 - Authentication simplified (email+password based login)

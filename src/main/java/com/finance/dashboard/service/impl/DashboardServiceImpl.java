@@ -2,6 +2,7 @@ package com.finance.dashboard.service.impl;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.finance.dashboard.dto.res.CategorySummaryResponse;
@@ -22,6 +23,7 @@ public class DashboardServiceImpl implements DashboardService {
 
 	private final FinancialRecordRepository recordRepository;
 
+	@Cacheable("summaryCache")
 	@Override
 	public DashboardSummaryResponse getSummary() {
 
@@ -47,6 +49,7 @@ public class DashboardServiceImpl implements DashboardService {
 				.build();
 	}
 
+	@Cacheable("categoryCache")
 	@Override
 	public List<CategorySummaryResponse> getCategorySummary() {
 
@@ -57,6 +60,7 @@ public class DashboardServiceImpl implements DashboardService {
 				.toList();
 	}
 
+	@Cacheable("recentCache")
 	@Override
 	public List<FinancialRecordResponse> getRecentRecords() {
 
@@ -77,6 +81,7 @@ public class DashboardServiceImpl implements DashboardService {
 		}).toList();
 	}
 
+	@Cacheable("monthlyCache")
 	@Override
 	public List<MonthlySummaryResponse> getMonthlySummary() {
 
