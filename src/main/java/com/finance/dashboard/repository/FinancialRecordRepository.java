@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.finance.dashboard.entity.FinancialRecord;
 
@@ -31,4 +32,13 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
 	@Query("SELECT r.category, SUM(r.amount) FROM FinancialRecord r GROUP BY r.category")
 	List<Object[]> getCategorySummary();
 
+	@Query("""
+			SELECT r FROM FinancialRecord r
+			WHERE (:type IS NULL OR r.type = :type)
+			AND (:category IS NULL OR r.category = :category)
+			AND (:startDate IS NULL OR r.recordDate >= :startDate)
+			AND (:endDate IS NULL OR r.recordDate <= :endDate)
+			""")
+	List<FinancialRecord> filterRecords(@Param("type") String type, @Param("category") String category,
+			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

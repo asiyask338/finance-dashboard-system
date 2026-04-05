@@ -1,5 +1,6 @@
 package com.finance.dashboard.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.finance.dashboard.dto.req.CreateFinancialRecordRequest;
@@ -19,4 +20,6 @@ public interface FinancialRecordService {
 	void deleteRecord(Long id);
 
 	FinancialRecordResponse updateRecord(Long id, UpdateFinancialRecordRequest request);
+
+	List<FinancialRecordResponse> filterRecords(String type, String category, LocalDate startDate, LocalDate endDate);
 }

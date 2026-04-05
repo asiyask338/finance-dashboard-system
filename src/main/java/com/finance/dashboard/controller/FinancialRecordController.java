@@ -1,5 +1,6 @@
 package com.finance.dashboard.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -107,6 +108,20 @@ public class FinancialRecordController {
 		FinancialRecordResponse response = recordService.updateRecord(id, request);
 
 		log.info("Financial record with id {} updated successfully: {}", id, response);
+
+		return response;
+	}
+
+	@GetMapping("/filter")
+	public List<FinancialRecordResponse> filterRecords(@RequestParam(required = false) String type,
+			@RequestParam(required = false) String category, @RequestParam(required = false) LocalDate startDate,
+			@RequestParam(required = false) LocalDate endDate) {
+
+		log.info("Filtering financial records with type: {}, category: {}, startDate: {}, endDate: {}");
+
+		List<FinancialRecordResponse> response = recordService.filterRecords(type, category, startDate, endDate);
+
+		log.info("Found {} financial records matching filter criteria", response.size());
 
 		return response;
 	}

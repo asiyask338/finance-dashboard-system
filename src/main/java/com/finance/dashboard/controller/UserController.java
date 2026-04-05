@@ -85,7 +85,7 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	@Tag(name = "Update User", description = "Update user details and role by user ID")
+	@Operation(summary = "Update User", description = "Update user details and role by user ID")
 	public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
 
 		log.info("Received request to update user with id: {} and data: {}", id, request);

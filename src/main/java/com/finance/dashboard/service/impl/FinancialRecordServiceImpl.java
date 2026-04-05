@@ -1,5 +1,6 @@
 package com.finance.dashboard.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -138,5 +139,31 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 		log.info("Financial record updated with ID: {}", updated.getId());
 
 		return response;
+	}
+
+	@Override
+	public List<FinancialRecordResponse> filterRecords(String type, String category, LocalDate startDate,
+			LocalDate endDate) {
+
+		log.info("Filtering financial records with type: {}, category: {}, startDate: {}, endDate: {}", type, category,
+				startDate, endDate);
+
+		List<FinancialRecord> records = recordRepository.filterRecords(type, category, startDate, endDate);
+
+		log.info("Found {} records matching filter criteria", records.size());
+
+		return records.stream().map(record -> {
+			FinancialRecordResponse response = new FinancialRecordResponse();
+
+			response.setId(record.getId());
+			response.setAmount(record.getAmount());
+			response.setType(record.getType());
+			response.setCategory(record.getCategory());
+			response.setRecordDate(record.getRecordDate());
+			response.setNotes(record.getNotes());
+			response.setUserName(record.getUser().getName());
+
+			return response;
+		}).toList();
 	}
 }
