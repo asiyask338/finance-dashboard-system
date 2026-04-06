@@ -410,7 +410,7 @@ Swagger UI: http://localhost:8088/swagger-ui/index.html
 
 Caching is implemented for dashboard APIs using Spring Cache.
 
-- Summary, Monthly, and Recent APIs are cached
+- Summary, Monthly, Category and Recent APIs are cached
 - Cache is cleared on data updates
 - Improves performance and reduces database load
 

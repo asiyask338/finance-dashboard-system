@@ -35,7 +35,6 @@ public class SecureConfig {
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(traceIdFilter, JWTFilter.class)
 				.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
-		;
 
 		return http.build();
 	}

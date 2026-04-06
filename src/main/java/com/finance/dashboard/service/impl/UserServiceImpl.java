@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-		log.info("Found user: {}", user.getEmail());
+		log.info("Found user with email: {}", user.getEmail());
 
 		return modelMapper.map(user, UserResponse.class);
 

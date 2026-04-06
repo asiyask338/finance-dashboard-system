@@ -193,16 +193,16 @@ public class FinancialRecordServiceImpl implements FinancialRecordService {
 
 		Page<FinancialRecord> recordsPage = recordRepository.searchRecords(keyword, pageable);
 
-		return recordsPage.map(record -> {
+		return recordsPage.map(records -> {
 			FinancialRecordResponse response = new FinancialRecordResponse();
 
-			response.setId(record.getId());
-			response.setAmount(record.getAmount());
-			response.setType(record.getType());
-			response.setCategory(record.getCategory());
-			response.setRecordDate(record.getRecordDate());
-			response.setNotes(record.getNotes());
-			response.setUserName(record.getUser().getName());
+			response.setId(records.getId());
+			response.setAmount(records.getAmount());
+			response.setType(records.getType());
+			response.setCategory(records.getCategory());
+			response.setRecordDate(records.getRecordDate());
+			response.setNotes(records.getNotes());
+			response.setUserName(records.getUser().getName());
 
 			return response;
 		});

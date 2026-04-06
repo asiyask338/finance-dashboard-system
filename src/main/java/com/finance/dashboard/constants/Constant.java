@@ -36,4 +36,10 @@ public class Constant {
 
 	public static final String ACCESSROLE = "ROLE_";
 
+	public static final String INVALID_TYPE = "INVLAID_TYPE";
+
+	public static final String SALARY = "SALARY";
+
+	public static final String BONUS = "BONUS";
+
 }
