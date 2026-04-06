@@ -267,6 +267,23 @@ spring.datasource.password=YOUR_PASSWORD
 - MySQL
 
 ---
+---
+
+## 🧩 Configuration & Best Practices
+
+### 🔐 Environment Variables
+
+Sensitive configurations such as database credentials are not hardcoded in the application.
+
+Instead, environment variables are used:
+
+```
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+```
+
+
 
 ### Database Setup
 
@@ -449,7 +466,6 @@ Caching is implemented for dashboard APIs using Spring Cache.
 - Add refresh tokens
 - Implement Redis-based rate limiting
 - Add integration tests
-- Add caching for dashboard APIs
 
 ---
  
